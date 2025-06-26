@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Daily Update Form</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      max-width: 500px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.15);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      color: #fff;
+    }
+
+    h2 { text-align: center; margin-bottom: 20px; font-weight: 600; }
+    label { font-size: 14px; margin-bottom: 6px; display: block; }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      margin-bottom: 16px;
+      font-size: 15px;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    input::placeholder, textarea::placeholder { color: #ddd; }
+    button {
+      background: #fff;
+      color: #333;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    button:hover { background: #eee; }
+    .thank-you { display: none; text-align: center; }
+    .thank-you h1 { font-size: 26px; margin-bottom: 10px; }
+    .thank-you p { font-size: 16px; }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="form-container">
+    <h2>Project Feedback Form</h2>
+    <form id="feedback-form">
+      <label for="name">Name</label>
+      <input type="text" name="name" id="name" placeholder="Enter your name" required>
+
+      <label for="number">Phone Number</label>
+      <input type="tel" name="number" id="number" placeholder="Enter your number" required>
+
+      <label for="project">Project Name</label>
+      <input type="text" name="project" id="project" placeholder="Enter project name" required>
+
+      <label for="feedback">Feedback</label>
+      <textarea name="feedback" id="feedback" placeholder="Your feedback..." rows="4" required></textarea>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <div class="container thank-you" id="thank-you-container">
+    <h1>🎉 Thank You!</h1>
+    <p>Your response has been submitted successfully.</p>
+  </div>
+
+  <script>
+    document.getElementById("feedback-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      const formContainer = document.getElementById("form-container");
+      const thankYouContainer = document.getElementById("thank-you-container");
+
+      try {
+        let response = await fetch("https://script.google.com/macros/s/AKfycbwiZCWLDtaMrsWccqzrqWzr-7rHHyj1wA451eIRA6q4/dev", {
+          method: "POST",
+          body: formData,
+        });
+
+        let result = await response.text();
+        if (result.toLowerCase().includes("success")) {
+          e.target.reset();
+          formContainer.style.display = "none";
+          thankYouContainer.style.display = "block";
+        } else {
+          alert("Submission failed. Please try again.");
+        }
+      } catch (error) {
+        alert("Something went wrong. Check console for details.");
+        console.error("Error:", error);
+      }
+    });
+  </script>
+
+</body>
+</html>
